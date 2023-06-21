@@ -31,22 +31,6 @@ function App() {
     <div className="App">
       <h1>Github Search Interface</h1>
       <SearchInput />
-      {/* was done just for test ⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇ */}
-      <div>
-        <hr />
-        <h2>Repositories react</h2>
-        <ul>
-          {data.search.nodes.map((repo: any) => (
-            <li key={repo.name}>
-              <a href={repo.url} target="_blank" rel="noopener noreferrer">
-                {repo.name}
-              </a>
-              <p>{repo.description}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* ⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆ */}
     </div>
   );
 }

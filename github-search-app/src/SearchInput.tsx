@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
 import { debounce } from "lodash";
+import { Rating } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 const SEARCH_REPOSITORIES = gql`
   query SearchRepositories($searchTerm: String!) {
@@ -16,6 +18,8 @@ const SEARCH_REPOSITORIES = gql`
   }
 `;
 
+const MAX_RATING = 5;
+
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchRepositories, { loading, error, data }] =
@@ -27,7 +31,6 @@ const SearchInput = () => {
     "search"
   );
 
-  // Debounce the search function to avoid excessive API calls
   const debouncedSearch = debounce((searchTerm: string) => {
     searchRepositories({ variables: { searchTerm } });
   }, 300);
@@ -57,48 +60,47 @@ const SearchInput = () => {
     );
   };
 
-  const handleRatingChange = (repositoryName: string, rating: number) => {
-    setFavorites(
-      favorites.map((favorite) => {
-        if (favorite.name === repositoryName) {
-          return { ...favorite, rating };
-        }
-        return favorite;
-      })
+  const FavoritesList = () => {
+    const handleRatingChange = (repositoryName: string, rating: number) => {
+      setFavorites((prevFavorites) =>
+        prevFavorites.map((favorite) => {
+          if (favorite.name === repositoryName) {
+            return { ...favorite, rating };
+          }
+          return favorite;
+        })
+      );
+    };
+
+    return (
+      <div>
+        <h2>Favorite Repositories</h2>
+        {favorites.length === 0 ? (
+          <p>No favorite repositories selected.</p>
+        ) : (
+          <ul>
+            {favorites.map((favorite) => (
+              <li key={favorite.name}>
+                {favorite.name}
+                <div className="rating-stars">
+                  <Rating
+                    name={favorite.name}
+                    value={favorite.rating}
+                    onChange={(event, newValue) =>
+                      handleRatingChange(favorite.name, newValue || 0)
+                    }
+                  />
+                </div>
+                <button onClick={() => handleRemoveFavorite(favorite.name)}>
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     );
   };
-
-  const FavoritesList = () => (
-    <div>
-      <h2>Favorite Repositories</h2>
-      {favorites.length === 0 ? (
-        <p>No favorite repositories selected.</p>
-      ) : (
-        <ul>
-          {favorites.map((favorite, idx) => (
-            <li key={idx}>
-              {favorite.name}
-              <input
-                type="number"
-                min="1"
-                max="5"
-                value={favorite.rating}
-                onChange={(event) =>
-                  handleRatingChange(
-                    favorite.name,
-                    parseInt(event.target.value)
-                  )
-                }
-              />
-              <button onClick={() => handleRemoveFavorite(favorite.name)}>
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
 
   return (
     <div>
@@ -121,8 +123,8 @@ const SearchInput = () => {
                   <p>{repo.description}</p>
                   <button onClick={() => handleToggleFavorite(repo.name)}>
                     {favorites.some((favorite) => favorite.name === repo.name)
-                      ? "Unmark as Favorite"
-                      : "Mark as Favorite"}
+                      ? "Delete from Favorites"
+                      : "Add to Favorites list"}
                   </button>
                 </li>
               ))}
