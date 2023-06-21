@@ -1,5 +1,5 @@
-import "./App.css";
 import { useQuery, gql } from "@apollo/client";
+import { Box, Typography } from "@mui/material";
 import SearchInput from "./SearchInput";
 
 const GET_REPOSITORIES = gql`
@@ -20,18 +20,18 @@ function App() {
   const { loading, error, data } = useQuery(GET_REPOSITORIES);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Typography>Loading...</Typography>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <Typography>Error: {error.message}</Typography>;
   }
 
   return (
-    <div className="App">
-      <h1>Github Search Interface</h1>
+    <Box sx={{ textAlign: "center" }}>
+      <Typography variant="h1">Github Search Interface</Typography>
       <SearchInput />
-    </div>
+    </Box>
   );
 }
 

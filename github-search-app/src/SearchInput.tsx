@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
 import { debounce } from "lodash";
-import { Rating } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import {
+  Rating,
+  Typography,
+  Button,
+  Box,
+  TextField,
+  List,
+  ListItem,
+} from "@mui/material";
 
 const SEARCH_REPOSITORIES = gql`
   query SearchRepositories($searchTerm: String!) {
@@ -60,80 +67,126 @@ const SearchInput = () => {
     );
   };
 
-  const FavoritesList = () => {
-    const handleRatingChange = (repositoryName: string, rating: number) => {
-      setFavorites((prevFavorites) =>
-        prevFavorites.map((favorite) => {
-          if (favorite.name === repositoryName) {
-            return { ...favorite, rating };
-          }
-          return favorite;
-        })
-      );
-    };
-
-    return (
-      <div>
-        <h2>Favorite Repositories</h2>
-        {favorites.length === 0 ? (
-          <p>No favorite repositories selected.</p>
-        ) : (
-          <ul>
-            {favorites.map((favorite) => (
-              <li key={favorite.name}>
-                {favorite.name}
-                <div className="rating-stars">
-                  <Rating
-                    name={favorite.name}
-                    value={favorite.rating}
-                    onChange={(event, newValue) =>
-                      handleRatingChange(favorite.name, newValue || 0)
-                    }
-                  />
-                </div>
-                <button onClick={() => handleRemoveFavorite(favorite.name)}>
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+  const handleRatingChange = (repositoryName: string, rating: number) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.map((favorite) =>
+        favorite.name === repositoryName ? { ...favorite, rating } : favorite
+      )
     );
   };
 
+  const FavoritesList = () => (
+    <Box>
+      <Typography variant="h2">Favorite Repositories</Typography>
+      {favorites.length === 0 ? (
+        <Typography variant="body1">
+          No favorite repositories selected.
+        </Typography>
+      ) : (
+        <List>
+          {favorites.map((favorite) => (
+            <ListItem
+              key={favorite.name}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Box sx={{ minWidth: "500px" }}>{favorite.name}</Box>
+              <Box>
+                <Rating
+                  name={favorite.name}
+                  value={favorite.rating}
+                  onChange={(event, newValue) =>
+                    handleRatingChange(favorite.name, newValue || 0)
+                  }
+                />
+              </Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleRemoveFavorite(favorite.name)}
+                sx={{ ml: 2, backgroundColor: "blue" }}
+              >
+                Remove
+              </Button>
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </Box>
+  );
+
   return (
-    <div>
-      <div>
-        <button onClick={() => setCurrentPage("search")}>Search</button>
-        <button onClick={() => setCurrentPage("favorites")}>Favorites</button>
-      </div>
+    <Box sx={{ textAlign: "center" }}>
+      <Box
+        sx={{
+          marginBottom: "1rem",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setCurrentPage("search")}
+        >
+          Search
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setCurrentPage("favorites")}
+        >
+          Favorites
+        </Button>
+      </Box>
       {currentPage === "search" && (
-        <div>
-          <input type="text" value={searchTerm} onChange={handleInputChange} />
-          {loading && <p>Loading...</p>}
-          {error && <p>Error: {error.message}</p>}
+        <Box>
+          <TextField
+            type="text"
+            value={searchTerm}
+            onChange={handleInputChange}
+            variant="outlined"
+          />
+          {loading && <Typography>Loading...</Typography>}
+          {error && <Typography>Error: {error.message}</Typography>}
           {data && (
-            <ul>
-              {data.search.nodes.map((repo: any) => (
-                <li key={repo.name}>
-                  <a href={repo.url} target="_blank" rel="noopener noreferrer">
-                    {repo.name}
-                  </a>
-                  <p>{repo.description}</p>
-                  <button onClick={() => handleToggleFavorite(repo.name)}>
-                    {favorites.some((favorite) => favorite.name === repo.name)
-                      ? "Delete from Favorites"
-                      : "Add to Favorites list"}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <Box sx={{ textAlign: "center" }}>
+              <List>
+                {data.search.nodes.map((repo: any) => (
+                  <ListItem
+                    key={repo.name}
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <a
+                      href={repo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {repo.name}
+                    </a>
+                    <Typography>{repo.description}</Typography>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        marginLeft: "1rem",
+                        backgroundColor: favorites.some(
+                          (favorite) => favorite.name === repo.name
+                        )
+                          ? "red"
+                          : "green",
+                      }}
+                      onClick={() => handleToggleFavorite(repo.name)}
+                    >
+                      {favorites.some((favorite) => favorite.name === repo.name)
+                        ? "Delete from Favorites"
+                        : "Add to Favorites list"}
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           )}
-        </div>
+        </Box>
       )}
       {currentPage === "favorites" && <FavoritesList />}
-    </div>
+    </Box>
   );
 };
 
