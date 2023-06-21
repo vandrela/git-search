@@ -1,0 +1,24 @@
+.container {
+    text-align: center;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 230px;
+    margin-bottom: 1rem;
+  }
+  
+  .textField {
+    margin-bottom: 1rem;
+  }
+  
+  .loadingText {
+    margin-top: 1rem;
+  }
+  
+  .errorText {
+    color: red;
+    margin-top: 1rem;
+  }
+  

@@ -1,0 +1,39 @@
+.container {
+    text-align: center;
+  }
+  
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 80%;
+    overflow-x: scroll;
+  }
+  
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .listItemBlock {
+    width: 33%;
+  }
+
+  .listItemBlock:last-child {
+    margin-left: 13%;
+    width: 20%;
+  }
+  
+  .favoriteButton {
+    margin-left: 1rem;
+  }
+  
+  .favoriteButton.add {
+    background-color: green;
+  }
+  
+  .favoriteButton.delete {
+    background-color: red;
+  }
+  

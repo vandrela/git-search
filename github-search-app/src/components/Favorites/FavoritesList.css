@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .heading {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .noFavoritesText {
+    font-size: 1rem;
+  }
+  
+  .list-favorites {
+    width: 50%;
+  }
+
+  .listItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .rating {
+    margin-right: 2rem;
+  }
+  
+  .repositoryName {
+    flex-grow: 1;
+    margin-right: 1rem;
+  }
+  .removeButton {
+    margin-left: 0.5rem;
+    background-color: blue;
+  }
+  

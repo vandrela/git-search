@@ -15,7 +15,7 @@ client.setLink(
     new ApolloLink((operation, forward) => {
       operation.setContext({
         headers: {
-          authorization: `Bearer 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`,
+          authorization: `Bearer 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`,
         },
       });
       return forward(operation);

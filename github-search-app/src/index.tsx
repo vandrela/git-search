@@ -18,7 +18,6 @@ root.render(
       <ThemeProvider theme={theme}>
         <App />
       </ThemeProvider>
-      ,
     </ApolloProvider>
   </React.StrictMode>
 );
